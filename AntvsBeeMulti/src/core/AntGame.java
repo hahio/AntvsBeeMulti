@@ -36,7 +36,7 @@ import ants.ThrowerAnt;
 /**
  * A class that controls the graphical game of Ants vs. Some-Bees. Game simulation system and GUI interaction are intermixed.
  *
- * @author Joel
+ * @author romain
  * @version Fa2014
  */
 @SuppressWarnings("serial")

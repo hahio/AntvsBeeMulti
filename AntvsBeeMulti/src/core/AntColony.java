@@ -7,7 +7,7 @@ import ants.QueenAnt;
 /**
  * An entire colony of ants and their tunnels.
  *
- * @author Joel
+ * @author auteur
  * @version Fall 2014
  */
 public class AntColony {
