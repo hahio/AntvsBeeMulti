@@ -17,6 +17,9 @@ public class HarvesterAnt extends Ant {
 		super(2,1);
 	}
 
+	/**
+	 * Creates a unit of Food
+	 */
 	@Override
 	public void action (AntColony colony) {
 		colony.increaseFood(1);

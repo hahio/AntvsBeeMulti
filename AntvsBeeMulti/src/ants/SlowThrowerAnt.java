@@ -3,8 +3,17 @@ package ants;
 import core.AntColony;
 import core.Bee;
 
+/**
+ * An Thrower Ant who can slow bee.
+ *
+ * @author Maël
+ */
 public class SlowThrowerAnt extends ThrowerAnt{
 	
+	/**
+	 * Creates a new SlowThrower Ant.
+	 * Armor: 1, Food: 4, Damage: 0, range : 3
+	 */
 	public SlowThrowerAnt(){
 		super(4,1);
 	}

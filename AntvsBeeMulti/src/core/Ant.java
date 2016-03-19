@@ -8,7 +8,7 @@ package core;
 public abstract class Ant extends Insect {
 
 	protected int foodCost; // the amount of food needed to make this ant
-	protected boolean blocker;
+	protected boolean blocker; //if the Ant can block bees
 	/**
 	 * Creates a new Ant, with a food cost of 0.
 	 *

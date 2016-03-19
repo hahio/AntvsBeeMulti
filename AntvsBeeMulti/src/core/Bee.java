@@ -8,6 +8,8 @@ package core;
 public class Bee extends Insect {
 
 	private static final int DAMAGE = 1;
+	protected int foodCost;
+	protected boolean isArmored=false;
 
 	/**
 	 * Creates a new bee with the given armor
@@ -18,6 +20,13 @@ public class Bee extends Insect {
 	public Bee (int armor) {
 		super(armor);
 		watersafe=true;
+		
+	}
+	
+	public Bee (int armor, int foodCost){
+		super(armor);
+		watersafe=true;
+		this.foodCost=foodCost;
 	}
 
 	/**
