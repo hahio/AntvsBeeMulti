@@ -20,7 +20,7 @@ public class FireAnt extends Ant{
 		
 	}
 	@Override
-	public void reduceArmor (int amount) {//coucou
+	public void reduceArmor (int amount) {
 		armor -= amount;
 		if (armor <= 0) {
 			System.out.println(this + " ran out of armor and expired");
