@@ -39,7 +39,7 @@ import ants.ThrowerAnt;
  * @author romain
  * @version Fa2014
  */
-@SuppressWarnings("serial")
+
 public class AntGame extends JPanel implements ActionListener, MouseListener,KeyListener {
 
 	/**
