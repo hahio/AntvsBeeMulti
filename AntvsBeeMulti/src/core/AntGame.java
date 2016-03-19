@@ -47,6 +47,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	 */
 	private static final long serialVersionUID = 1L;
 	// game models
+	private boolean multigame;
 	private AntColony colony;
 	private Hive hive;
 	private Player player;
@@ -107,8 +108,9 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	 * @param hive
 	 *            The hive (and attack plan) for the game
 	 */
-	public AntGame (AntColony colony, Hive hive,Player player) {
+	public AntGame (AntColony colony, Hive hive,Player player,boolean multigame) {
 		// game init stuff
+		this.multigame=multigame;
 		this.colony = colony;
 		this.hive = hive;
 		this.player=player;
@@ -226,6 +228,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 				startAnimation(bee);
 			}
 			//add other ants
+			if (multigame){
 			player.send(""+hive.getnbFutureBees());
 			hive.resetFutureBees();
 			int adv=Integer.parseInt(player.take());
@@ -234,6 +237,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 				hive.addWave(turn+1,adv);
 				for (Bee bee:hive.getFuturBees(turn+1))
 					allBeePositions.put(bee, new AnimPosition((int) (HIVE_POS.x + (20 * Math.random() - 10)), (int) (HIVE_POS.y + (100 * Math.random() - 50))));
+			}
 			}
 
 			// if want to do this to ants as well, will need to start storing dead ones with AnimPositions
@@ -284,10 +288,10 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 				JOptionPane.showMessageDialog(this, "The ant queen has perished! Please try again.", "Bzzzzz!", JOptionPane.PLAIN_MESSAGE);
 				System.exit(0); // quit
 			}
-			/*if (hive.getBees().length + colony.getAllBees().size() == 0) { // no more bees--we won!
+			if (!multigame && (hive.getBees().length + colony.getAllBees().size() == 0)) { // no more bees--we won!
 				JOptionPane.showMessageDialog(this, "All bees are vanquished. You win!", "Yaaaay!", JOptionPane.PLAIN_MESSAGE);
 				System.exit(0); // quit
-			}*/
+			}
 		}
 	}
 
@@ -302,7 +306,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	
 	private synchronized void keypPressed (KeyEvent e) {
 		char pressed= e.getKeyChar();
-		if (pressed=='p' && colony.getFood()>=2){
+		if (multigame && pressed=='p' && colony.getFood()>=2){
 			colony.reduceFood(2);                             //TODO: change cost Ants
 			hive.increaseFutureBees();
 			System.out.println(hive.getnbFutureBees()+"fourmies");}
