@@ -44,17 +44,21 @@ public class AntColony {
 		tunnelLength = Math.min(tunnelLength, MAX_TUNNEL_LENGTH); // don't go off the screen!
 		// set up tunnels, as a kind of linked-list
 		Place curr, prev; // reference to current exit of the tunnel
+		int cptWater =moatFrequency;
 		for (int tunnel = 0; tunnel < numTunnels; tunnel++) {
 			curr = queenPlace; // start the tunnel's at the queen
 			for (int step = 0; step < tunnelLength; step++) {
 				prev = curr; // keep track of the previous guy (who we will exit to)
 				
-				if (moatFrequency==0  || step%moatFrequency==0)
-					curr = new Place("tunnel[" + tunnel + "-" + step + "]", prev); // create new place with an exit that is the previous spot
+				if (moatFrequency!=0 && cptWater%moatFrequency==0)
+					curr = new Water("tunnel[" + tunnel + "-" + step + "]", prev); // create new place with an exit that is the previous spot
 				else 
-					curr = new Water("tunnel[" + tunnel + "-" + step + "]", prev);
+					curr = new Place("tunnel[" + tunnel + "-" + step + "]", prev);
+				cptWater++;
+				
 				prev.setEntrance(curr); // the previous person's entrance is the new spot
 				places.add(curr); // add new place to the list
+				
 			}
 			beeEntrances.add(curr); // current place is last item in the tunnel, so mark that it is a bee entrance
 		} // loop to next tunnel

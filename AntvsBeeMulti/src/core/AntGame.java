@@ -204,8 +204,20 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 
 			// bees take action!
 			for (Bee bee : colony.getAllBees()) {
-				bee.action(colony);
-				startAnimation(bee); // start up animation for the bee if needed
+				if (bee.getTimeStun()==0){
+					if (bee.getTimeSlow()==0){
+						bee.action(colony);
+						startAnimation(bee); // start up animation for the bee if needed
+					} else if (bee.getCooldownSlow()==0){
+						bee.action(colony);
+						startAnimation(bee); // start up animation for the bee if needed
+						bee.setCooldownSlow(2);
+						bee.setTimeSlow(bee.getTimeSlow()-1);
+					} else {
+						bee.setCooldownSlow(bee.getCooldownSlow()-1);
+						bee.setTimeSlow(bee.getTimeSlow()-1);
+					}
+				}  else {bee.setTimeStun(bee.getTimeStun()-1);}
 			}
 
 			// new invaders attack!

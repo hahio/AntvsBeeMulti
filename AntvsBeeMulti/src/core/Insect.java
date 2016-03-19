@@ -11,6 +11,9 @@ public abstract class Insect {
 	protected boolean watersafe=false;
 	protected int armor; // insect's current armor
 	protected Place place; // insect's current location
+	protected int timeStun=0;
+	protected int timeSlow=0;
+	protected int cooldownSlow=0;
 
 	/**
 	 * Creates a new Insect with the given armor in the given location
@@ -69,6 +72,31 @@ public abstract class Insect {
 	public boolean getWatersafe(){
 		return watersafe;
 	}
+	
+	public int getTimeStun() {
+		return timeStun;
+	}
+
+	public void setTimeStun(int timeStun) {
+		this.timeStun = timeStun;
+	}
+
+	public int getTimeSlow() {
+		return timeSlow;
+	}
+
+	public void setTimeSlow(int timeSlow) {
+		this.timeSlow = timeSlow;
+	}
+
+	public int getCooldownSlow() {
+		return cooldownSlow;
+	}
+
+	public void setCooldownSlow(int cooldownSlow) {
+		this.cooldownSlow = cooldownSlow;
+	}
+	
 	
 	/**
 	 * Reduces the insect's current armor (e.g., through damage)

@@ -10,7 +10,7 @@ public class AntsVsSomeBees {
 	public static Scanner s = new Scanner(System.in);
 	
 	public static void main (String[] args) {
-		AntColony colony = new AntColony(1, 8, 0, 22); // specify the colony ]tunnels, length, moats, food]
+		AntColony colony = new AntColony(3, 10, 3, 22); // specify the colony ]tunnels, length, moats, food]
 		Hive hive = Hive.makeBlankHive(); // specify the attackers (the hive)
 		 System.out.println("Veuillez indiquer server ou client ?");
          String role = s.nextLine();
