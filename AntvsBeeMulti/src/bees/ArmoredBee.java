@@ -10,7 +10,7 @@ import core.Bee;
 public class ArmoredBee extends Bee{
 	
 	/**
-	 * Creates a new Bodyguard Ant.
+	 * Creates a new Armored Bee.
 	 * Armor: 2, Food: 4, Damage: 1
 	 */
 	public ArmoredBee(){

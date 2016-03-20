@@ -7,7 +7,7 @@ import java.util.Scanner;
  * A driver for the Ants vs. Some-Bees game
  */
 public class AntsVsSomeBees {
-	public static Scanner s = new Scanner(System.in);
+
 	
 	public static void main (String[] args) {
 		AntColony colony = new AntColony(3, 10, 3, 22); // specify the colony ]tunnels, length, moats, food]
