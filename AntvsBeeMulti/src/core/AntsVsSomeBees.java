@@ -11,7 +11,7 @@ public class AntsVsSomeBees {
 	
 	public static void main (String[] args) {
 		boolean multigame;
-		AntColony colony = new AntColony(1, 10, 3, 22); // specify the colony ]tunnels, length, moats, food]
+		AntColony colony = new AntColony(3, 10, 3, 22); // specify the colony ]tunnels, length, moats, food]
 		Hive hive=Hive.makeBlankHive();;// specify the attackers (the hive)
 		Player player=null;
 		System.out.println("Veuillez indiquer single or multiplayer ?");
