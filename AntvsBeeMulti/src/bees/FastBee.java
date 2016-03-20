@@ -2,13 +2,15 @@ package bees;
 
 import core.Bee;
 
+
+/**
+ * A light bee who can move 2 case in one turn
+ *
+ * @author Maël
+ */
 public class FastBee extends Bee{
 	
-	/**
-	 * A light bee who can move 2 case in one turn
-	 *
-	 * @author Maël
-	 */
+	
 	
 	/**
 	 * Creates a new Fast Bee.

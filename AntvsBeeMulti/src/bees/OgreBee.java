@@ -7,28 +7,28 @@ import core.Bee;
  *
  * @author Maël
  */
-public class HugeBee extends Bee{
+public class OgreBee extends Bee{
 	
-	private int cooldown=0;
+	private boolean cooldown=true;
 	
 	/**
 	 * Creates a new Huge Bee.
 	 * Armor: 5, Food: 4, Damage: 1
 	 */
-	public HugeBee(){
+	public OgreBee(){
 		super (5, 4);
 	}
 	
 	public void action(){
-		if (cooldown==0){
+		if (cooldown){
 			if (isBlocked()) {
 				sting(place.getAnt());
 			}
 			else if (armor > 0) {
 				moveTo(place.getExit());
 			}
-			cooldown=1;
-		} else { cooldown=0;}
+			cooldown=false;
+		} else { cooldown=false;}
 	}
 	
 
