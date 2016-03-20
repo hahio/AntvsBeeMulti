@@ -47,7 +47,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	// game models
+	// game models 
 	private boolean multigame;
 	private AntColony colony;
 	private Hive hive;
