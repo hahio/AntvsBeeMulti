@@ -3,7 +3,7 @@ package bees;
 import core.Bee;
 
 /**
- * An Bee who can resist to explosive damage (caused by FireAnts)
+ * A Bee who can resist to explosive damage (caused by FireAnts)
  *
  * @author Maël
  */

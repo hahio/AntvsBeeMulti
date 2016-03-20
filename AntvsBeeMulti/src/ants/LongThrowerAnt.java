@@ -18,7 +18,7 @@ public class LongThrowerAnt extends ThrowerAnt{
 	}
 	
 	public Bee getTarget () {
-		return place.getClosestBee(4, -1);
+		return place.getClosestBee(4, 1000);
 	}
 
 }
