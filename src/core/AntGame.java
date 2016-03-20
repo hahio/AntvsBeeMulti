@@ -32,7 +32,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import ants.ThrowerAnt;
-import core.AntGame.ImageUtils;
 
 /**
  * A class that controls the graphical game of Ants vs. Some-Bees. Game simulation system and GUI interaction are intermixed.
@@ -40,7 +39,7 @@ import core.AntGame.ImageUtils;
  * @author romain
  * @version Fa2014
  */
-@SuppressWarnings("serial")
+
 public class AntGame extends JPanel implements ActionListener, MouseListener,KeyListener {
 
 	/**
@@ -72,25 +71,14 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	private final Image TUNNEL_IMAGE = ImageUtils.loadImage("img/tunnel.gif");
 	private final Image BEE_IMAGE = ImageUtils.loadImage("img/bee.gif");
 	private final Image REMOVER_IMAGE = ImageUtils.loadImage("img/remover.gif");
-	
-	//variable for Bee Selector
-	
-	private static final String BEE_PKG = "bees";
-	private final ArrayList<String> BEE_TYPES;
-	private final Map<String, Image> BEE_IMAGES;
-	private static final String BEE_FILE = "beelist.properties";
-	public static final Point PANEL_POS_BEE = new Point(0, 650);
-	private Map<Rectangle, Bee> beeSelectorAreas;
-	
 
 	// positioning constants
-	public static final Dimension FRAME_SIZE = new Dimension(1050, 768);
+	public static final Dimension FRAME_SIZE = new Dimension(1024, 768);
 	public static final Dimension ANT_IMAGE_SIZE = new Dimension(66, 71); // assumed size; may be greater than actual image size
 	public static final int BEE_IMAGE_WIDTH = 58;
 	public static final Point PANEL_POS = new Point(20, 40);
-	
 	public static final Dimension PANEL_PADDING = new Dimension(2, 4);
-	public static final Point PLACE_POS = new Point(40, 150);
+	public static final Point PLACE_POS = new Point(40, 180);
 	public static final Dimension PLACE_PADDING = new Dimension(10, 10);
 	public static final int PLACE_MARGIN = 10;
 	public static final Point HIVE_POS = new Point(875, 300);
@@ -136,26 +124,18 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		ANT_TYPES = new ArrayList<String>();
 		ANT_IMAGES = new HashMap<String, Image>();
 		LEAF_COLORS = new HashMap<String, Color>();
-		initializeInsect(ANT_FILE,ANT_PKG,ANT_TYPES,ANT_IMAGES,LEAF_COLORS);
+		initializeAnts();
 
-		// tracking bee animations and bee's properties
+		// tracking bee animations
 		allBeePositions = new HashMap<Bee, AnimPosition>();
 		initializeBees();
-		BEE_TYPES = new ArrayList<String>();
-		BEE_IMAGES = new HashMap<String, Image>();
-		initializeInsect(BEE_FILE,BEE_PKG,BEE_TYPES,BEE_IMAGES,LEAF_COLORS);
 		leaves = new ArrayList<AnimPosition>();
-		beeSelectorAreas = new HashMap<Rectangle, Bee>();
 
 		// map clickable areas to what they refer to. Might be more efficient to use separate components, but this keeps everything together
 		antSelectorAreas = new HashMap<Rectangle, Ant>();
 		colonyAreas = new HashMap<Rectangle, Place>();
 		colonyRects = new HashMap<Place, Rectangle>();
-		
-		
-		initializeInsectSelector(PANEL_POS_BEE, ANT_TYPES);
-		initializeInsectSelector(PANEL_POS, ANT_TYPES);
-		
+		initializeAntSelector();
 		initializeColony();
 
 		// adding interaction
@@ -181,7 +161,6 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		g2d.clearRect(0, 0, FRAME_SIZE.width, FRAME_SIZE.height); // clear to background color
 
 		drawAntSelector(g2d);
-		
 
 		// text displays
 		String antString = "none";
@@ -512,39 +491,38 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		g2d.draw(removerArea);
 		g2d.drawImage(REMOVER_IMAGE, removerArea.x + PANEL_PADDING.width, removerArea.y + PANEL_PADDING.height, null);
 	}
-	
-	
 
 	/**
 	 * Initializes the Ant graphics for the game. This method loads Ant details from an external file.
 	 * Note that this method MUST be called before others (since they rely on the Ant details!)
 	 */
-	private void initializeInsect (String IN_FILE, String IN_PKG, ArrayList<String> IN_TYPES, Map<String, Image> IN_IMAGES, Map<String, Color> LEAF_COLORS) {
-		// load in properties from external file
-				try {
-					Scanner sc = new Scanner(new File(IN_FILE));
-					while (sc.hasNextLine()) {
-						String line = sc.nextLine();
-						if (line.matches("\\w.*")) { // not a comment
-							String[] parts = line.split(","); // get the entry parts
-							String inType = IN_PKG + "." + parts[0].trim(); // prepend package name
-							try {
-								Class.forName(inType); // make sure the class is implemented and we can load it
-								IN_TYPES.add(inType);
-								IN_IMAGES.put(inType, ImageUtils.loadImage(parts[1].trim()));
-								if (parts.length > 2) {
-									LEAF_COLORS.put(inType, new Color(Integer.parseInt(parts[2].trim())));
-								}
-							}
-							catch (ClassNotFoundException e) {
-							} // if class isn't found, will continue (reading next line)
+	private void initializeAnts () {
+		// load ant properties from external file
+		try {
+			Scanner sc = new Scanner(new File(ANT_FILE));
+			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
+				if (line.matches("\\w.*")) { // not a comment
+					String[] parts = line.split(","); // get the entry parts
+					String antType = ANT_PKG + "." + parts[0].trim(); // prepend package name
+					try {
+						Class.forName(antType); // make sure the class is implemented and we can load it
+						ANT_TYPES.add(antType);
+						ANT_IMAGES.put(antType, ImageUtils.loadImage(parts[1].trim()));
+						if (parts.length > 2) {
+							LEAF_COLORS.put(antType, new Color(Integer.parseInt(parts[2].trim())));
 						}
 					}
-					sc.close();
+					catch (ClassNotFoundException e) {
+					} // if class isn't found, will continue (reading next line)
 				}
-				catch (IOException e) { // for IOException, NumberFormatException, ArrayIndex exception... basically if anything goes wrong, don't crash
-					System.out.println("Error loading insect gui properties: " + e);
-				}
+			}
+			sc.close();
+		}
+		catch (IOException e) { // for IOException, NumberFormatException, ArrayIndex exception... basically if anything goes wrong, don't crash
+			System.out.println("Error loading insect gui properties: " + e);
+		}
+
 	}
 
 	/**
@@ -594,39 +572,19 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	 * Initializes the graphical Ant Selector area.
 	 * Assumes that the Ants have already been initialized (and have established image resources)
 	 */
-	private void initializeInsectSelector (Point panel,ArrayList<String> IN_TYPES) {
-		Point pos = panel;
-		//Point pos = new Point(PANEL_POS); // starting point of the panel
+	private void initializeAntSelector () {
+		Point pos = new Point(PANEL_POS); // starting point of the panel
 		int width = ANT_IMAGE_SIZE.width + 2 * PANEL_PADDING.width;
 		int height = ANT_IMAGE_SIZE.height + 2 * PANEL_PADDING.height;
 
 		removerArea = new Rectangle(pos.x, pos.y, width, height);
 		pos.translate(width + 2, 0);
 
-		for (String antType : IN_TYPES) // go through the ants in the types; in order
+		for (String antType : ANT_TYPES) // go through the ants in the types; in order
 		{
 			Rectangle clickable = new Rectangle(pos.x, pos.y, width, height); // where to put the selector
 			Ant ant = buildAnt(antType); // the ant that gets deployed from that selector
 			antSelectorAreas.put(clickable, ant); // register the deployable ant so we can select it
-
-			pos.translate(width + 2, 0); // shift rectangle position for next run
-		}
-	}
-	
-	private void initializeBeeSelector (Point panel,ArrayList<String> IN_TYPES) {
-		Point pos = panel;
-		//Point pos = new Point(PANEL_POS); // starting point of the panel
-		int width = ANT_IMAGE_SIZE.width + 2 * PANEL_PADDING.width;
-		int height = ANT_IMAGE_SIZE.height + 2 * PANEL_PADDING.height;
-
-		removerArea = new Rectangle(pos.x, pos.y, width, height);
-		pos.translate(width + 2, 0);
-
-		for (String beeType : IN_TYPES) // go through the bees in the types; in order
-		{
-			Rectangle clickable = new Rectangle(pos.x, pos.y, width, height); // where to put the selector
-			Bee bee = buildBee(beeType); // the bee that gets deployed from that selector
-			beeSelectorAreas.put(clickable, bee); // register the deployable bee so we can select it
 
 			pos.translate(width + 2, 0); // shift rectangle position for next run
 		}
@@ -651,20 +609,6 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		}
 
 		return ant; // return the new ant
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Bee buildBee (String beeType) {
-		Bee bee = null;
-		try {
-			Class beeClass = Class.forName(beeType); // what class is this type
-			Constructor constructor = beeClass.getConstructor(); // find the default constructor (using reflection)
-			bee = (Bee) constructor.newInstance(); // call the default constructor to make a new bee
-		}
-		catch (Exception e) {
-		}
-
-		return bee; // return the new bee
 	}
 
 	////////////////////
