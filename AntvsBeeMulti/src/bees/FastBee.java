@@ -11,11 +11,11 @@ public class FastBee extends Bee{
 	 */
 	
 	/**
-	 * Creates a new Fast Ant.
-	 * Armor: 2, Food: 4, Damage: 1
+	 * Creates a new Fast Bee.
+	 * Armor: 1, Food: 4, Damage: 1
 	 */
 	public FastBee(){
-		super(2, 4);
+		super(1, 4);
 	}
 	
 	public void action(){
