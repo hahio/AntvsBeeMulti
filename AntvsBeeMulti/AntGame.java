@@ -52,8 +52,8 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	private AntColony colony;
 	private Hive hive;
 	private Player player;
-	public static final String ANT_FILE = "antlist.properties";
-	public static final String ANT_PKG = "ants";
+	private static final String ANT_FILE = "antlist.properties";
+	private static final String ANT_PKG = "ants";
 
 	// game clock & speed
 	public static final int FPS = 30; // target frames per second
@@ -65,22 +65,22 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 
 	// ant properties (laoded from external files, stored as member variables)
 	private final ArrayList<String> ANT_TYPES;
-	public  static Map<String, Image> ANT_IMAGES;// = new HashMap<String,Image>();
+	private final Map<String, Image> ANT_IMAGES;// = new HashMap<String,Image>();
 	private final Map<String, Color> LEAF_COLORS;// = new HashMap<String, Color>();
 
 	// other images (stored as member variables)
 	private final Image TUNNEL_IMAGE = ImageUtils.loadImage("img/tunnel.gif");
 	private final Image BEE_IMAGE = ImageUtils.loadImage("img/bee.gif");
-	public final static Image REMOVER_IMAGE = ImageUtils.loadImage("img/remover.gif");
+	private final Image REMOVER_IMAGE = ImageUtils.loadImage("img/remover.gif");
 	
 	//variable for Bee Selector
 	
 	private static final String BEE_PKG = "bees";
 	private final ArrayList<String> BEE_TYPES;
-	public static Map<String, Image> BEE_IMAGES;
+	private final Map<String, Image> BEE_IMAGES;
 	private static final String BEE_FILE = "beelist.properties";
 	public static final Point PANEL_POS_BEE = new Point(0, 650);
-	public static Map<Rectangle, Bee> beeSelectorAreas;
+	private Map<Rectangle, Bee> beeSelectorAreas;
 	
 
 	// positioning constants
@@ -103,19 +103,15 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	// areas that can be clicked
 	private Map<Rectangle, Place> colonyAreas; // maps from a clickable area to a Place
 	private Map<Place, Rectangle> colonyRects; // maps from a Place to its clickable rectangle (reverse lookup!)
-	public static Map<Rectangle, Ant> antSelectorAreas; // maps from a clickable area to an Ant that can be deployed
-	public static Rectangle removerArea; // click to remove an ant
+	private Map<Rectangle, Ant> antSelectorAreas; // maps from a clickable area to an Ant that can be deployed
+	private Rectangle removerArea; // click to remove an ant
 	private Place tunnelEnd; // a Place representing the end of the tunnels (for drawing)
-	public static Ant selectedAnt; // which ant is currently selected
-	public static Bee selectedBee;
+	private Ant selectedAnt; // which ant is currently selected
 
 	// variables tracking animations
 	private Map<Bee, AnimPosition> allBeePositions; // maps from Bee to an object storing animation status
 	private ArrayList<AnimPosition> leaves; // leaves we're animating
 
-	private Selector beeSelector;
-	private Selector antSelector;
-	
 	/**
 	 * Creates a new game of Ants vs. Some-Bees, with the given colony and hive setup
 	 *
@@ -157,8 +153,8 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		colonyRects = new HashMap<Place, Rectangle>();
 		
 		
-		Selector.beeSelector(PANEL_POS_BEE, BEE_TYPES);
-		Selector.antSelector(PANEL_POS, ANT_TYPES);
+		initializeInsectSelector(PANEL_POS_BEE, ANT_TYPES);
+		initializeInsectSelector(PANEL_POS, ANT_TYPES);
 		
 		initializeColony();
 
@@ -184,8 +180,8 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.clearRect(0, 0, FRAME_SIZE.width, FRAME_SIZE.height); // clear to background color
 
-		Selector.drawAntSelector(g2d,colony);
-		Selector.drawBeeSelector(g2d,colony);
+		drawAntSelector(g2d);
+		
 
 		// text displays
 		String antString = "none";
@@ -362,12 +358,6 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 				return; // stop searching
 			}
 		}
-		for (Rectangle rect : beeSelectorAreas.keySet()) {
-			if (rect.contains(pt)) {
-				selectedBee = beeSelectorAreas.get(rect);
-				return; // stop searching
-			}
-		}
 
 		// check if remover
 		if (removerArea.contains(pt)) {
@@ -483,6 +473,48 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 
 		return curve;
 	}
+
+	// Draws the ant selector area
+	private void drawAntSelector (Graphics2D g2d) {
+		// go through each selector area
+		for (Map.Entry<Rectangle, Ant> entry : antSelectorAreas.entrySet()) {
+			Rectangle rect = entry.getKey(); // selected area
+			Ant ant = entry.getValue(); // ant to select
+
+			// box status
+			g2d.setColor(Color.WHITE);
+			if (ant.getFoodCost() > colony.getFood()) {
+				g2d.setColor(Color.GRAY);
+			}
+			else if (ant == selectedAnt) {
+				g2d.setColor(Color.BLUE);
+			}
+			g2d.fill(rect);
+
+			// box outline
+			g2d.setColor(Color.BLACK);
+			g2d.draw(rect);
+
+			// ant image
+			Image img = ANT_IMAGES.get(ant.getClass().getName());
+			g2d.drawImage(img, rect.x + PANEL_PADDING.width, rect.y + PANEL_PADDING.height, null);
+
+			// food cost
+			g2d.drawString("" + ant.getFoodCost(), rect.x + (rect.width / 2), rect.y + ANT_IMAGE_SIZE.height + 4 + PANEL_PADDING.height);
+		}
+
+		// for removing an ant
+		if (selectedAnt == null) {
+			g2d.setColor(Color.BLUE);
+			g2d.fill(removerArea);
+		}
+		g2d.setColor(Color.BLACK);
+		g2d.draw(removerArea);
+		g2d.drawImage(REMOVER_IMAGE, removerArea.x + PANEL_PADDING.width, removerArea.y + PANEL_PADDING.height, null);
+	}
+	
+	
+
 	/**
 	 * Initializes the Ant graphics for the game. This method loads Ant details from an external file.
 	 * Note that this method MUST be called before others (since they rely on the Ant details!)
@@ -514,6 +546,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 					System.out.println("Error loading insect gui properties: " + e);
 				}
 	}
+
 	/**
 	 * Initializes the Bee graphics for the game. Sets up positions for animations
 	 */
@@ -556,7 +589,49 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		colonyAreas.put(queenRect, tunnelEnd);
 		colonyRects.put(tunnelEnd, queenRect);
 	}
+
+	/**
+	 * Initializes the graphical Ant Selector area.
+	 * Assumes that the Ants have already been initialized (and have established image resources)
+	 */
+	private void initializeInsectSelector (Point panel,ArrayList<String> IN_TYPES) {
+		Point pos = panel;
+		//Point pos = new Point(PANEL_POS); // starting point of the panel
+		int width = ANT_IMAGE_SIZE.width + 2 * PANEL_PADDING.width;
+		int height = ANT_IMAGE_SIZE.height + 2 * PANEL_PADDING.height;
+
+		removerArea = new Rectangle(pos.x, pos.y, width, height);
+		pos.translate(width + 2, 0);
+
+		for (String antType : IN_TYPES) // go through the ants in the types; in order
+		{
+			Rectangle clickable = new Rectangle(pos.x, pos.y, width, height); // where to put the selector
+			Ant ant = buildAnt(antType); // the ant that gets deployed from that selector
+			antSelectorAreas.put(clickable, ant); // register the deployable ant so we can select it
+
+			pos.translate(width + 2, 0); // shift rectangle position for next run
+		}
+	}
 	
+	private void initializeBeeSelector (Point panel,ArrayList<String> IN_TYPES) {
+		Point pos = panel;
+		//Point pos = new Point(PANEL_POS); // starting point of the panel
+		int width = ANT_IMAGE_SIZE.width + 2 * PANEL_PADDING.width;
+		int height = ANT_IMAGE_SIZE.height + 2 * PANEL_PADDING.height;
+
+		removerArea = new Rectangle(pos.x, pos.y, width, height);
+		pos.translate(width + 2, 0);
+
+		for (String beeType : IN_TYPES) // go through the bees in the types; in order
+		{
+			Rectangle clickable = new Rectangle(pos.x, pos.y, width, height); // where to put the selector
+			Bee bee = buildBee(beeType); // the bee that gets deployed from that selector
+			beeSelectorAreas.put(clickable, bee); // register the deployable bee so we can select it
+
+			pos.translate(width + 2, 0); // shift rectangle position for next run
+		}
+	}
+
 	/**
 	 * Returns a new instance of an Ant object of the given subclass
 	 *
@@ -564,8 +639,8 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	 *            The name of an Ant subclass (e.g., "HarvesterAnt")
 	 * @return An instance of that subclass, created using the default constructor
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" }) 
-	public static Ant buildAnt (String antType) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Ant buildAnt (String antType) {
 		Ant ant = null;
 		try {
 			Class antClass = Class.forName(antType); // what class is this type
@@ -574,11 +649,12 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		}
 		catch (Exception e) {
 		}
+
 		return ant; // return the new ant
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" }) 
-	public static Bee buildBee (String beeType) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Bee buildBee (String beeType) {
 		Bee bee = null;
 		try {
 			Class beeClass = Class.forName(beeType); // what class is this type
@@ -587,6 +663,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		}
 		catch (Exception e) {
 		}
+
 		return bee; // return the new bee
 	}
 
@@ -707,6 +784,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		 */
 		public static Image loadImage (String filename) {
 			Image img = null;
+
 			try {
 				img = ImageIO.read(new File(filename)); // read the image from a file
 			}
@@ -716,4 +794,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 			return img; // return the image
 		}
 	}
+
+	
+
 }

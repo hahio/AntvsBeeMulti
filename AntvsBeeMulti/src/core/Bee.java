@@ -80,4 +80,8 @@ public class Bee extends Insect {
 			moveTo(place.getExit());
 		}
 	}
+
+	public int getFoodCost() {
+		return 0;
+	}
 }
