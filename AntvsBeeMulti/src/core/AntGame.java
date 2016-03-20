@@ -153,7 +153,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		colonyRects = new HashMap<Place, Rectangle>();
 		
 		
-		initializeBeeSelector(PANEL_POS_BEE, BEE_TYPES);
+		initializeInsectSelector(PANEL_POS_BEE, ANT_TYPES);
 		initializeInsectSelector(PANEL_POS, ANT_TYPES);
 		
 		initializeColony();
@@ -181,6 +181,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		g2d.clearRect(0, 0, FRAME_SIZE.width, FRAME_SIZE.height); // clear to background color
 
 		drawAntSelector(g2d);
+		
 
 		// text displays
 		String antString = "none";
@@ -554,8 +555,6 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		for (int i = 0; i < bees.length; i++) {
 			allBeePositions.put(bees[i], new AnimPosition((int) (HIVE_POS.x + (20 * Math.random() - 10)), (int) (HIVE_POS.y + (100 * Math.random() - 50))));
 		}
-		
-		
 	}
 
 	/**
