@@ -1,7 +1,6 @@
 package core;
 
 
-import java.util.Scanner;
 
 /**
  * A driver for the Ants vs. Some-Bees game

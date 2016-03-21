@@ -31,6 +31,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+
+
+
+import bees.CryptBee;
 import ants.ThrowerAnt;
 import core.AntGame.ImageUtils;
 
@@ -52,6 +56,8 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	private AntColony colony;
 	private Hive hive;
 	private Player player;
+	private CryptBee sending;
+	private CryptBee reception;
 	public static final String ANT_FILE = "antlist.properties";
 	public static final String ANT_PKG = "ants";
 
@@ -113,8 +119,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	private Map<Bee, AnimPosition> allBeePositions; // maps from Bee to an object storing animation status
 	private ArrayList<AnimPosition> leaves; // leaves we're animating
 
-	private Selector beeSelector;
-	private Selector antSelector;
+
 	
 	/**
 	 * Creates a new game of Ants vs. Some-Bees, with the given colony and hive setup
@@ -130,7 +135,8 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		this.colony = colony;
 		this.hive = hive;
 		this.player=player;
-
+		sending=new CryptBee();
+		reception=new CryptBee();
 		// game clock tracking
 		frame = 0;
 		turn = 0;
@@ -254,14 +260,20 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 			}
 			//add other ants
 			if (multigame){
-			player.send(""+hive.getnbFutureBees());
-			hive.resetFutureBees();
-			int adv=Integer.parseInt(player.take());
-			System.out.println(adv);
-			if (adv!=0){
-				hive.addWave(turn+1,adv);
-				for (Bee bee:hive.getFuturBees(turn+1))
+				String txt=new String(sending.getSend());
+				if (txt.equals(""))
+					player.send("0");
+				else 
+					player.send(txt);
+				sending.reset();
+				reception.setSend(player.take());
+				System.out.println(" reception : "+reception.getSend());
+			if (!reception.getSend().contains("0")){
+				hive.addWave(turn+1,reception.convert());
+				for (Bee bee:hive.getFuturBees(turn+1)){
 					allBeePositions.put(bee, new AnimPosition((int) (HIVE_POS.x + (20 * Math.random() - 10)), (int) (HIVE_POS.y + (100 * Math.random() - 50))));
+					System.out.println(bee);
+				}
 			}
 			}
 
@@ -331,10 +343,6 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 	
 	private synchronized void keypPressed (KeyEvent e) {
 		char pressed= e.getKeyChar();
-		if (multigame && pressed=='p' && colony.getFood()>=2){
-			colony.reduceFood(2);                             //TODO: change cost Ants
-			hive.increaseFutureBees();
-			System.out.println(hive.getnbFutureBees()+"fourmies");}
 	}
 	
 	private synchronized void handleClick (MouseEvent e) {
@@ -365,6 +373,9 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		for (Rectangle rect : beeSelectorAreas.keySet()) {
 			if (rect.contains(pt)) {
 				selectedBee = beeSelectorAreas.get(rect);
+				Bee deployable = buildBee(selectedBee.getClass().getName());
+				sending.add(deployable);
+				System.out.println("1ere etape sending : "+sending.getSend());
 				return; // stop searching
 			}
 		}

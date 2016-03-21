@@ -46,7 +46,8 @@ public class Bee extends Insect {
 	 *            The place to move to
 	 */
 	public void moveTo (Place place) {
-		this.place.removeInsect(this);
+		if (this.place!=null)
+			this.place.removeInsect(this);
 		place.addInsect(this);
 	}
 
@@ -86,6 +87,6 @@ public class Bee extends Insect {
 	}
 
 	public int getFoodCost() {
-		return 0;
+		return foodCost;
 	}
 }

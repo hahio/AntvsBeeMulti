@@ -16,7 +16,6 @@ public class Hive extends Place {
 	
 	private int beeArmor; // armor for all the bees
 	private Map<Integer, Bee[]> waves; // a mapping from attack times to the list of bees that will charge in
-	private int nbFuturBee=0;
 	/**
 	 * Creates a new hive, in which Bees have the given armor
 	 *
@@ -38,16 +37,7 @@ public class Hive extends Place {
 	 *            The current time
 	 * @return An array of the bees who invaded (for animation/processing)
 	 */
-	public void increaseFutureBees(){
-		nbFuturBee++;
-	}
-	
-	public void resetFutureBees(){
-		nbFuturBee=0;
-	}
-	public int getnbFutureBees(){
-		return nbFuturBee;
-	}
+
 	
 	public Bee[] getFuturBees(int turn){
 		return waves.get(turn);
@@ -87,7 +77,10 @@ public class Hive extends Place {
 		}
 		waves.put(attackTime, bees);
 	}
-
+	
+	public void addWave (int attackTime, Bee[] bees) {
+		waves.put(attackTime, bees);
+	}
 	/**
 	 * Returns an array of all the bees who are part of the attack (whether they are currently in the hive or not!)
 	 *

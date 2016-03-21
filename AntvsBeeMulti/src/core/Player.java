@@ -4,11 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 
 public class Player {
@@ -19,8 +14,8 @@ public class Player {
 	private DatagramSocket socket;
 	private DatagramPacket reception;
 	private DatagramPacket envoi;
-	private byte[] buffer = new byte[10000];
-	private boolean isServer;
+	private byte[] buffer = new byte[1024];
+	public boolean isServer;
 	
 	public Player(){
 		isServer=true;
@@ -60,15 +55,17 @@ public class Player {
 	
 	public void send(String Message){
 		try{
-			buffer=Message.getBytes();
-			envoi = new DatagramPacket(buffer, buffer.length,otherIp,otherPort);
+			byte[] buffer1 = new byte[50];
+			buffer1=Message.getBytes();
+			envoi = new DatagramPacket(buffer1, buffer1.length,otherIp,otherPort);
 			socket.send(envoi);
 		}catch (IOException e) {e.printStackTrace();}
 	}
 	
 	public String take(){
 		try{
-			reception = new DatagramPacket(buffer, buffer.length);
+			byte[] buffer1 = new byte[50];
+			reception = new DatagramPacket(buffer1, buffer1.length);
 			socket.receive(reception);
 		}catch (IOException e) {e.printStackTrace();}
 		return new String(reception.getData());
