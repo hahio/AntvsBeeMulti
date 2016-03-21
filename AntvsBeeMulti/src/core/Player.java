@@ -55,7 +55,7 @@ public class Player {
 	
 	public void send(String Message){
 		try{
-			byte[] buffer1 = new byte[50];
+			byte[] buffer1 = new byte[64];
 			buffer1=Message.getBytes();
 			envoi = new DatagramPacket(buffer1, buffer1.length,otherIp,otherPort);
 			socket.send(envoi);
@@ -64,7 +64,7 @@ public class Player {
 	
 	public String take(){
 		try{
-			byte[] buffer1 = new byte[50];
+			byte[] buffer1 = new byte[64];
 			reception = new DatagramPacket(buffer1, buffer1.length);
 			socket.receive(reception);
 		}catch (IOException e) {e.printStackTrace();}

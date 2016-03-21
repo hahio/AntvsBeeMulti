@@ -157,15 +157,16 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		BEE_IMAGES = new HashMap<String, Image>();
 		initializeInsect(BEE_FILE,BEE_PKG,BEE_TYPES,BEE_IMAGES,LEAF_COLORS);
 		leaves = new ArrayList<AnimPosition>();
-		beeSelectorAreas = new HashMap<Rectangle, Bee>();
+	
 
 		// map clickable areas to what they refer to. Might be more efficient to use separate components, but this keeps everything together
 		antSelectorAreas = new HashMap<Rectangle, Ant>();
 		colonyAreas = new HashMap<Rectangle, Place>();
 		colonyRects = new HashMap<Place, Rectangle>();
 		
-		
-		Selector.beeSelector(PANEL_POS_BEE, BEE_TYPES);
+		if (multigame){
+			beeSelectorAreas = new HashMap<Rectangle, Bee>();
+			Selector.beeSelector(PANEL_POS_BEE, BEE_TYPES);}
 		Selector.antSelector(PANEL_POS, ANT_TYPES);
 		
 		initializeColony();
@@ -193,7 +194,8 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		g2d.clearRect(0, 0, FRAME_SIZE.width, FRAME_SIZE.height); // clear to background color
 
 		Selector.drawAntSelector(g2d,colony);
-		Selector.drawBeeSelector(g2d,colony);
+		if (multigame)
+			Selector.drawBeeSelector(g2d,colony);
 
 		// text displays
 		String antString = "none";
@@ -270,13 +272,15 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 				sending.reset();
 				reception.setSend(player.take());
 				System.out.println(" reception : "+reception.getSend());
-			if (!reception.getSend().contains("0")){
-				hive.addWave(turn+1,reception.convert());
-				for (Bee bee:hive.getFuturBees(turn+1)){
-					allBeePositions.put(bee, new AnimPosition((int) (HIVE_POS.x + (20 * Math.random() - 10)), (int) (HIVE_POS.y + (100 * Math.random() - 50))));
-					System.out.println();
+				if (reception.getSend().contains("lose")){//wining game
+					JOptionPane.showMessageDialog(this, "Your opponent is vanquished. You win!", "Victory!", JOptionPane.PLAIN_MESSAGE);
+					System.exit(0); // quit
 				}
-			}
+				if (!reception.getSend().contains("0")){
+					hive.addWave(turn+1,reception.convert());
+					for (Bee bee:hive.getFuturBees(turn+1))
+						allBeePositions.put(bee, new AnimPosition((int) (HIVE_POS.x + (20 * Math.random() - 10)), (int) (HIVE_POS.y + (100 * Math.random() - 50))));
+				}
 			}
 
 			// if want to do this to ants as well, will need to start storing dead ones with AnimPositions
@@ -323,12 +327,17 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 		if (frame == TURN_SECONDS * FPS / 2) // wait half a turn (1.5 sec) before ending
 		{
 			// check for end condition before proceeding
-			if (colony.queenHasBees()) { // we lost!
+			if (!multigame && colony.queenHasBees()) { // we lost!
 				JOptionPane.showMessageDialog(this, "The ant queen has perished! Please try again.", "Bzzzzz!", JOptionPane.PLAIN_MESSAGE);
 				System.exit(0); // quit
 			}
 			if (!multigame && (hive.getBees().length + colony.getAllBees().size() == 0)) { // no more bees--we won!
 				JOptionPane.showMessageDialog(this, "All bees are vanquished. You win!", "Yaaaay!", JOptionPane.PLAIN_MESSAGE);
+				System.exit(0); // quit
+			}
+			if (multigame && colony.queenHasBees()) { // we lost!
+				player.send("lose");
+				JOptionPane.showMessageDialog(this, "The ant queen has perished! Your opponent is the Best.", "Defeat!", JOptionPane.PLAIN_MESSAGE);
 				System.exit(0); // quit
 			}
 		}
@@ -372,13 +381,16 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 				return; // stop searching
 			}
 		}
-		for (Rectangle rect : beeSelectorAreas.keySet()) {
-			if (rect.contains(pt)) {
-				selectedBee = beeSelectorAreas.get(rect);
-				Bee deployable = buildBee(selectedBee.getClass().getName());
-				sending.add(deployable);
-				System.out.println("1ere etape sending : "+sending.getSend());
-				return; // stop searching
+		if (multigame){
+			for (Rectangle rect : beeSelectorAreas.keySet()) {
+				if (rect.contains(pt)) {
+					selectedBee = beeSelectorAreas.get(rect);
+					Bee deployable = buildBee(selectedBee.getClass().getName());
+					if (deployable.getFoodCost()<=colony.getFood()){
+						colony.reduceFood(deployable.getFoodCost());
+						sending.add(deployable);}
+					return; // stop searching
+				}
 			}
 		}
 
@@ -452,10 +464,9 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 
 	// Draws all the Bees (included deceased) in their current locations
 	private void drawBees (Graphics2D g2d) {
-		for(Entry<Bee,AnimPosition> entry : allBeePositions.entrySet()) {
+		for(Map.Entry<Bee,AnimPosition> entry : allBeePositions.entrySet()) {
 			Bee bee = entry.getKey();
 			AnimPosition pos=entry.getValue();
-			System.out.println(bee.getClass().getName());
 			g2d.drawImage(BEE_IMAGES.get(bee.getClass().getName()), (int) pos.x, (int) pos.y, null); // draw a bee at that position!
 		}/*
 		for (AnimPosition pos : allBeePositions.values()) // go through all the Bee positions

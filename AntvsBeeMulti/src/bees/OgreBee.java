@@ -30,7 +30,7 @@ public class OgreBee extends Bee{
 				moveTo(place.getExit());
 			}
 			cooldown=false;
-		} else { cooldown=false;}
+		} else { cooldown=true;}
 	}
 	
 
