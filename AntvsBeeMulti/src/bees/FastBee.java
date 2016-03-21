@@ -1,14 +1,17 @@
 package bees;
 
+import core.AntColony;
 import core.Bee;
 
+
+/**
+ * A light bee who can move 2 case in one turn
+ *
+ * @author Maï¿½l
+ */
 public class FastBee extends Bee{
 	
-	/**
-	 * A light bee who can move 2 case in one turn
-	 *
-	 * @author Maël
-	 */
+	
 	
 	/**
 	 * Creates a new Fast Bee.
@@ -18,7 +21,8 @@ public class FastBee extends Bee{
 		super(1, 4);
 	}
 	
-	public void action(){
+	@Override
+	public void action(AntColony colony){
 		for(int i=0;i<2;i++){
 			if (isBlocked()) {
 				sting(place.getAnt());

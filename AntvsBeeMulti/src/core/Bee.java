@@ -59,6 +59,8 @@ public class Bee extends Insect {
 	public boolean isArmored(){
 		return isArmored;
 	}
+	
+	
 
 	/**
 	 * Returns true if the bee cannot advance (because an ant is in the way)

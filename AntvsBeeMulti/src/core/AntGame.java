@@ -272,7 +272,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 				hive.addWave(turn+1,reception.convert());
 				for (Bee bee:hive.getFuturBees(turn+1)){
 					allBeePositions.put(bee, new AnimPosition((int) (HIVE_POS.x + (20 * Math.random() - 10)), (int) (HIVE_POS.y + (100 * Math.random() - 50))));
-					System.out.println(bee);
+					System.out.println();
 				}
 			}
 			}

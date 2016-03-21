@@ -1,34 +1,36 @@
 package bees;
 
+import core.AntColony;
 import core.Bee;
 
 /**
  * A Bee with a large armor who can take 1 action each 2 turn
  *
- * @author Maël
+ * @author Maï¿½l
  */
-public class HugeBee extends Bee{
+public class OgreBee extends Bee{
 	
-	private int cooldown=0;
+	private boolean cooldown=true;
 	
 	/**
 	 * Creates a new Huge Bee.
 	 * Armor: 5, Food: 4, Damage: 1
 	 */
-	public HugeBee(){
+	public OgreBee(){
 		super (5, 4);
 	}
 	
-	public void action(){
-		if (cooldown==0){
+	@Override
+	public void action(AntColony colony){
+		if (cooldown){
 			if (isBlocked()) {
 				sting(place.getAnt());
 			}
 			else if (armor > 0) {
 				moveTo(place.getExit());
 			}
-			cooldown=1;
-		} else { cooldown=0;}
+			cooldown=false;
+		} else { cooldown=false;}
 	}
 	
 
