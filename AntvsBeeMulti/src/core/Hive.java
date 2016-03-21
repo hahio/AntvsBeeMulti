@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import bees.NormalBee;
+
 /**
  * Represents a hive--which contains the bees that will attack!
  *
@@ -72,7 +74,7 @@ public class Hive extends Place {
 		if (numBees==0)
 			return;
 		for (int i = 0; i < bees.length; i++) {
-			bees[i] = new Bee(beeArmor);
+			bees[i] = new NormalBee();
 			this.addInsect(bees[i]); // put the bee in Place
 		}
 		waves.put(attackTime, bees);

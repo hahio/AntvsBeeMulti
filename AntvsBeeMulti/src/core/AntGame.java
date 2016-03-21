@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
@@ -30,6 +31,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
 
 
 
@@ -450,10 +452,16 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 
 	// Draws all the Bees (included deceased) in their current locations
 	private void drawBees (Graphics2D g2d) {
+		for(Entry<Bee,AnimPosition> entry : allBeePositions.entrySet()) {
+			Bee bee = entry.getKey();
+			AnimPosition pos=entry.getValue();
+			System.out.println(bee.getClass().getName());
+			g2d.drawImage(BEE_IMAGES.get(bee.getClass().getName()), (int) pos.x, (int) pos.y, null); // draw a bee at that position!
+		}/*
 		for (AnimPosition pos : allBeePositions.values()) // go through all the Bee positions
 		{
-			g2d.drawImage(BEE_IMAGE, (int) pos.x, (int) pos.y, null); // draw a bee at that position!
-		}
+			g2d.drawImage(BEE_IMAGES.get("bees.FastBee"), (int) pos.x, (int) pos.y, null); // draw a bee at that position!
+		}*/
 	}
 
 	// Draws all the leaves (animation elements) at their current location
