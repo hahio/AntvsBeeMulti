@@ -5,9 +5,7 @@ import core.Bee;
 
 
 /**
- * A light bee who can move 2 case in one turn
- *
- * @author Ma�l
+ * A light bee who can do two action in one turn
  */
 public class FastBee extends Bee{
 	
@@ -21,6 +19,9 @@ public class FastBee extends Bee{
 		super(1, 4);
 	}
 	
+	/**
+	 * Do 2 action in each turn
+	 */
 	@Override
 	public void action(AntColony colony){
 		for(int i=0;i<2;i++){

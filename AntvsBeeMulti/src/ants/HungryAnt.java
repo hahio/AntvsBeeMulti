@@ -6,8 +6,6 @@ import core.Bee;
 
 /**
  * An Ant who kill a bees by turn(every 3 turns)
- *
- * @author Maël
  */
 public class HungryAnt extends Ant{
 	
@@ -22,12 +20,17 @@ public class HungryAnt extends Ant{
 		coolDown=0;
 	}
 	
+	/**
+	 * Returns a target for this ant
+	 *
+	 * @return A bee to target
+	 */
 	public Bee getTarget () {
 		return place.getClosestBee(0, 0);
 	}
 	
 	/**
-	 * Kill a bee in the same place if cooldown==0
+	 * Kill a random bee in the same place if she can
 	 */
 	@Override
 	public void action(AntColony colony){

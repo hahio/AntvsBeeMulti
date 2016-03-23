@@ -5,13 +5,12 @@ import core.AntColony;
 
 /**
  * An Ant that harvests food
- *
- * @author YOUR NAME HERE
  */
 public class HarvesterAnt extends Ant {
 
 	/**
 	 * Creates a new Harvester Ant
+	 * Armor: 1, Food: 2, Damage: 0
 	 */
 	public HarvesterAnt () {
 		super(2,1);

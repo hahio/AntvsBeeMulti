@@ -4,9 +4,7 @@ import core.Ant;
 import core.AntColony;
 
 /**
- * An Thrower Ant with a large armor who do nothing
- *
- * @author Maël
+ * An Ant with a large armor who do nothing
  */
 public class WallAnt extends Ant{
 	

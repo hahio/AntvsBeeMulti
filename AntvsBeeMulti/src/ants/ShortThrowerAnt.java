@@ -4,8 +4,6 @@ import core.Bee;
 
 /**
  * An Thrower Ant who only can attack in short distance
- *
- * @author Maël
  */
 public class ShortThrowerAnt extends ThrowerAnt{
 	
@@ -18,6 +16,11 @@ public class ShortThrowerAnt extends ThrowerAnt{
 		super(3,1);
 	}
 	
+	/**
+	 * Returns a target for this ant
+	 *
+	 * @return A bee to target
+	 */
 	public Bee getTarget () {
 		return place.getClosestBee(0, 2);
 	}

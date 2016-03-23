@@ -7,8 +7,6 @@ import core.Damaging;
 
 /**
  * An Ant who can't be touched by bees
- *
- * @author Maël
  */
 public class NinjaAnt extends Ant {
 	
@@ -24,6 +22,9 @@ public class NinjaAnt extends Ant {
 		blocker=false;
 	}
 	
+	/**
+	 * Attack a random bee in the same place
+	 */
 	public void action(AntColony colony){
 		Bee[] bees=place.getBees();
 		for (int i=0;i<bees.length;i++)

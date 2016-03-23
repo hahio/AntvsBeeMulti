@@ -4,9 +4,7 @@ import core.AntColony;
 import core.Bee;
 
 /**
- * A Bee with a large armor who can take 1 action each 2 turn
- *
- * @author Ma�l
+ * A Bee with a large armor who can do one action each two turn
  */
 public class OgreBee extends Bee{
 	
@@ -14,12 +12,16 @@ public class OgreBee extends Bee{
 	
 	/**
 	 * Creates a new Huge Bee.
-	 * Armor: 5, Food: 4, Damage: 1
+	 * Armor: 5, Food: 8, Damage: 4
 	 */
 	public OgreBee(){
-		super (5, 4);
+		super (10, 8);
+		setDamage(4);
 	}
 	
+	/**
+	 * Can do only one action each two turn
+	 */
 	@Override
 	public void action(AntColony colony){
 		if (cooldown){

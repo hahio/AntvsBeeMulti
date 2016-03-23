@@ -5,8 +5,6 @@ import core.Bee;
 
 /**
  * An Thrower Ant who can slow bee.
- *
- * @author Maël
  */
 public class SlowThrowerAnt extends ThrowerAnt{
 	
@@ -18,6 +16,9 @@ public class SlowThrowerAnt extends ThrowerAnt{
 		super(4,1);
 	}
 	
+	/**
+	 * Slow the Closest Bee for three turn
+	 */
 	public void action (AntColony colony){
 		Bee target = getTarget();
 		if (target !=null){

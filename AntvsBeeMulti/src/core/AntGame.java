@@ -271,7 +271,6 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 					player.send(txt);
 				sending.reset();
 				reception.setSend(player.take());
-				System.out.println(" reception : "+reception.getSend());
 				if (reception.getSend().contains("lose")){//wining game
 					JOptionPane.showMessageDialog(this, "Your opponent is vanquished. You win!", "Victory!", JOptionPane.PLAIN_MESSAGE);
 					System.exit(0); // quit

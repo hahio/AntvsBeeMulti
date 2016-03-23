@@ -1,11 +1,10 @@
 package ants;
 
+import core.AntColony;
 import core.Bee;
 
 /**
  * An Thrower Ant who only can attack in long distance
- *
- * @author Maël
  */
 public class LongThrowerAnt extends ThrowerAnt{
 	
@@ -17,8 +16,13 @@ public class LongThrowerAnt extends ThrowerAnt{
 		super(3,1);
 	}
 	
+	/**
+	 * Returns a target for this ant
+	 *
+	 * @return A bee to target
+	 */
 	public Bee getTarget () {
-		return place.getClosestBee(4, 1000);
+		return place.getClosestBee(4, AntColony.MAX_TUNNEL_LENGTH);
 	}
 
 }

@@ -7,8 +7,6 @@ import core.Damaging;
 
 /**
  * An ant who throws leaves at bees
- *
- * @author YOUR NAME HERE
  */
 public class ThrowerAnt extends Ant {
 
@@ -16,7 +14,7 @@ public class ThrowerAnt extends Ant {
 
 	/**
 	 * Creates a new Thrower Ant.
-	 * Armor: 1, Food: 4, Damage: 1
+	 * Armor: 1, Food: 4, Damage: 1, range :3
 	 */
 	public ThrowerAnt () {
 		super(4,1);
@@ -36,7 +34,9 @@ public class ThrowerAnt extends Ant {
 		return place.getClosestBee(0, 3);
 	}
 
-	
+	/**
+	 * Attack the Closest Bee
+	 */
 	public void action (AntColony colony) {
 		Bee target = getTarget();
 		if (target != null) 

@@ -6,19 +6,16 @@ import core.Bee;
 import core.Damaging;
 
 /**
- * An Ant who deal damage in the entire line when she die
- *
- * @author Maël
+ * An Ant who deal damage for each bee in the same place
  */
 public class FireAnt extends Ant{
 	
-	/**
-	 * Creates a new Fire Ant
-	 * Armor: 1, Food: 4, Damage: +inf, range: 0
-	 */
-	
 	public Damaging damage; 
 	
+	/**
+	 * Creates a new Fire Ant
+	 * Armor: 1, Food: 4, Damage: 3, range: 0
+	 */
 	public FireAnt(){
 		super(4,1);
 		damage=new Damaging(3);

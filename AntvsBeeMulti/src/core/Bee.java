@@ -7,7 +7,7 @@ package core;
  */
 public class Bee extends Insect {
 
-	private static final int DAMAGE = 1;
+	private int DAMAGE = 1;
 	protected int foodCost;
 	protected boolean isArmored=false;
 
@@ -90,5 +90,9 @@ public class Bee extends Insect {
 
 	public int getFoodCost() {
 		return foodCost;
+	}
+	
+	public void setDamage(int DAMAGE){
+		this.DAMAGE=DAMAGE;
 	}
 }

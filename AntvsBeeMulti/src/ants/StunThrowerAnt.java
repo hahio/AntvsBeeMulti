@@ -19,6 +19,9 @@ public class StunThrowerAnt extends ThrowerAnt{
 		super(6,1);
 	}
 	
+	/**
+	 * Stun the Closest Bee for one turn
+	 */
 	public void action (AntColony colony){
 		Bee target = getTarget();
 		if (target !=null){

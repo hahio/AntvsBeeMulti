@@ -5,8 +5,6 @@ import core.Containing;
 
 /**
  * An Ant who protect the Ant who is in the same place
- *
- * @author Maël
  */
 
 public class BodyguardAnt extends Containing {

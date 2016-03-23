@@ -70,20 +70,5 @@ public class Player {
 		}catch (IOException e) {e.printStackTrace();}
 		return new String(reception.getData());
 	}
-	
-	
-	   /*
-	   public  void execute() throws IOException{
-            while(true){
-            	DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                server.receive(packet);
-                String str = new String(packet.getData());
-                System.out.println(str);
-                byte[] buffer2 = str.getBytes();
-                DatagramPacket packet2 = new DatagramPacket( buffer2,buffer2.length,packet.getAddress(),packet.getPort()
-                );
-                server.send(new DatagramPacket(buffer2,buffer2.length,clientsIp,clientsPort));
-              }
-	   }*/
 	      
 }
