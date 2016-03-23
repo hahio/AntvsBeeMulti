@@ -48,12 +48,20 @@ public class Bee extends Insect {
 	public void moveTo (Place place) {
 		if (this.place!=null)
 			this.place.removeInsect(this);
-		place.addInsect(this);
+		if (place !=null){
+			place.addInsect(this);
+		}
+		
+		
+			
 	}
 
 	@Override
 	public void leavePlace () {
-		place.removeInsect(this);
+		if (place!=null){
+			place.removeInsect(this);
+		}
+		
 	}
 	
 	public boolean isArmored(){

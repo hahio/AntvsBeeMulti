@@ -65,7 +65,7 @@ public class AntGame extends JPanel implements ActionListener, MouseListener,Key
 
 	// game clock & speed
 	public static final int FPS = 30; // target frames per second
-	public static final int TURN_SECONDS = 3; // seconds per turn
+	public static final int TURN_SECONDS = 2; // seconds per turn
 	public static final double LEAF_SPEED = .3; // in seconds
 	private int turn; // current game turn
 	private int frame; // time elapsed since last turn
